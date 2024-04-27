@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const userValidation = Joi.object({
+const signUpValidation = Joi.object({
   phoneNumber: Joi.string().required().messages({
     "any.required": "Phone number is required",
   }),
@@ -29,8 +29,7 @@ const userValidation = Joi.object({
 });
 
 exports.validateSignUp = (req, res, next) => {
-  console.log("xdd " + JSON.stringify(req.body));
-  const { error } = userValidation.validate(req.body);
+  const { error } = signUpValidation.validate(req.body);
 
   if (error) {
     return res.status(400).json({ error: error.details[0].message });

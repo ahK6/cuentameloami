@@ -36,7 +36,7 @@ const userSchema = new Schema(
       type: String,
     },
     status: {
-      type: Number,
+      type: String,
       default: "pending", //pending / active / banned
     },
     bannedComment: {
