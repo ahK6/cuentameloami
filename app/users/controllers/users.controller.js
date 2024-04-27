@@ -8,15 +8,17 @@ exports.signup = async (req, res, next) => {
 
   try {
     await user.save();
-    res.status(200).json({ message: "User registered successfully" });
+    res.status(200).json({ message: "Registrado correctamente" });
   } catch (error) {
     //si ocurre un problema devolvera el error
     if (error.errorResponse?.code === 11000) {
-      res.status(500).json({ message: "Email or Phonenumber already exist" });
-    } else {
       res
         .status(500)
-        .json({ message: "An error has occurred, please try again" });
+        .json({ message: "Correo electrónico o teléfono ya existente" });
+    } else {
+      res.status(500).json({
+        message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+      });
     }
   }
 };
@@ -27,13 +29,13 @@ exports.login = async (req, res, next) => {
   const user = await usersModel.findOne({ phoneNumber });
 
   if (!user) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.status(401).json({ message: "Credenciales inválidas" });
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.status(401).json({ message: "Credenciales inválidas" });
   }
 
   const token = jwt.sign(

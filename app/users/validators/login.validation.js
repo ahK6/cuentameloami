@@ -2,10 +2,10 @@ const Joi = require("joi");
 
 const loginValidation = Joi.object({
   phoneNumber: Joi.string().required().messages({
-    "any.required": "Phone number is required",
+    "any.required": "Teléfono es requerido",
   }),
   password: Joi.string().required().messages({
-    "any.required": "Password is required",
+    "any.required": "Contraseña es requerida",
   }),
 });
 

@@ -2,10 +2,10 @@ const Joi = require("joi");
 
 const signUpValidation = Joi.object({
   phoneNumber: Joi.string().required().messages({
-    "any.required": "Phone number is required",
+    "any.required": "Teléfono es requerido",
   }),
   password: Joi.string().required().messages({
-    "any.required": "Password is required",
+    "any.required": "Contraseña es requerida",
   }),
   email: Joi.string()
     .email({
@@ -14,13 +14,13 @@ const signUpValidation = Joi.object({
     })
     .required()
     .messages({
-      "string.email": "Enter a valid email address",
-      "any.required": "Email is required",
+      "string.email": "Ingresa un correo electrónico válido",
+      "any.required": "Correo electrónico es requerido",
     }),
   name: Joi.string().optional(),
   lastName: Joi.string().optional(),
   nickName: Joi.string().required().messages({
-    "any.required": "Nickname is required",
+    "any.required": "Apodo es requerido",
   }),
   birthday: Joi.string().optional(),
   country: Joi.string().optional(),
