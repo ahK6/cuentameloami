@@ -92,3 +92,43 @@ exports.getUserById = async (req, res, next) => {
     });
   }
 };
+
+exports.updateUser = async (req, res, next) => {
+  const { id } = req.user;
+
+  let updateFields = req.body;
+
+  try {
+    const userInfo = await usersModel.findOne({ _id: id }).select("-password");
+
+    if (userInfo.email === req.body.email) {
+      updateFields = { ...updateFields, email: undefined };
+    }
+
+    if (userInfo.phoneNumber === req.body.phoneNumber) {
+      updateFields = { ...updateFields, phoneNumber: undefined };
+    }
+
+    const updateObject = { $set: updateFields };
+
+    const updatedUser = await usersModel
+      .findByIdAndUpdate(id, updateObject, { new: true, runValidators: true })
+      .select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    return res.json(updatedUser);
+  } catch (error) {
+    if (error.errorResponse?.code === 11000) {
+      return res
+        .status(500)
+        .json({ message: "Correo electrónico o teléfono ya existente" });
+    } else {
+      return res.status(500).json({
+        message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+      });
+    }
+  }
+};
