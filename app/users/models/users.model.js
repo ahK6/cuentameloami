@@ -42,6 +42,10 @@ const userSchema = new Schema(
     bannedComment: {
       type: String,
     },
+    rol: {
+      type: String,
+      default: "user",
+    },
     country: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "countries",
