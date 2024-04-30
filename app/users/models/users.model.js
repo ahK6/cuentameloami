@@ -42,7 +42,7 @@ const userSchema = new Schema(
     bannedComment: {
       type: String,
     },
-    rol: {
+    role: {
       type: String,
       default: "user",
     },

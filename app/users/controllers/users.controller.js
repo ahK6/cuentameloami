@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const usersModel = require("../models/users.model");
+const { esIdMongo } = require("../../shared/utils/isMongoId");
 
 exports.signup = async (req, res, next) => {
   const user = new usersModel(req.body);
@@ -51,6 +52,7 @@ exports.login = async (req, res, next) => {
       {
         id: user._id,
         phoneNumber: user.phoneNumber,
+        role: user.role,
       },
       "xddd",
       { expiresIn: "12h" }
@@ -112,14 +114,17 @@ exports.updateUser = async (req, res, next) => {
     const updateObject = { $set: updateFields };
 
     const updatedUser = await usersModel
-      .findByIdAndUpdate(id, updateObject, { new: true, runValidators: true })
+      .findByIdAndUpdate({ _id: id }, updateObject, {
+        new: true,
+        runValidators: true,
+      })
       .select("-password");
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    return res.json(updatedUser);
+    return res.status(200).json(updatedUser);
   } catch (error) {
     if (error.errorResponse?.code === 11000) {
       return res
@@ -130,5 +135,41 @@ exports.updateUser = async (req, res, next) => {
         message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
       });
     }
+  }
+};
+
+exports.banUser = async (req, res, next) => {
+  const { role } = req.user;
+
+  let { userId, banMessage } = req.body;
+  if (!esIdMongo(userId)) {
+    return res.status(500).json({ message: "ID de usuaro invalido" });
+  }
+
+  if (!role === "moderator" || !role === "admin") {
+    return res
+      .status(403)
+      .json({ message: "No tienes permiso para realizar esta accion" });
+  }
+
+  try {
+    const updateObject = { status: "banned", bannedComment: banMessage };
+    const updatedUser = await usersModel
+      .findByIdAndUpdate({ _id: userId }, updateObject, {
+        new: true,
+        runValidators: true,
+      })
+      .select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log("wrwer " + JSON.stringify(error));
+    return res.status(500).json({
+      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+    });
   }
 };
