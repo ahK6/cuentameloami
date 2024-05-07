@@ -15,6 +15,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/users", require("./app/users/routes/users.route"));
+app.use("/chat", require("./app/messages/routes/messages.route"));
 
 // Ruta de ejemplo
 

@@ -1,10 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const usersModel = require("../models/users.model");
+const UsersModel = require("../models/users.model");
 const { esIdMongo } = require("../../shared/utils/isMongoId");
 
 exports.signup = async (req, res, next) => {
-  const user = new usersModel(req.body);
+  const user = new UsersModel(req.body);
   user.password = await bcrypt.hash(req.body.password, 12);
 
   try {
@@ -28,7 +28,7 @@ exports.login = async (req, res, next) => {
   const { phoneNumber, password } = req.body;
 
   try {
-    const user = await usersModel.findOne({ phoneNumber });
+    const user = await UsersModel.findOne({ phoneNumber });
 
     if (!user) {
       return res.status(401).json({ message: "Credenciales inválidas" });
@@ -79,7 +79,7 @@ exports.getUserById = async (req, res, next) => {
   const { id } = req.user;
 
   try {
-    const userInfo = await usersModel.findOne({ _id: id }).select("-password");
+    const userInfo = await UsersModel.findOne({ _id: id }).select("-password");
 
     if (!userInfo) {
       return res
@@ -101,7 +101,7 @@ exports.updateUser = async (req, res, next) => {
   let updateFields = req.body;
 
   try {
-    const userInfo = await usersModel.findOne({ _id: id }).select("-password");
+    const userInfo = await UsersModel.findOne({ _id: id }).select("-password");
 
     if (userInfo.email === req.body.email) {
       updateFields = { ...updateFields, email: undefined };
@@ -113,12 +113,14 @@ exports.updateUser = async (req, res, next) => {
 
     const updateObject = { $set: updateFields };
 
-    const updatedUser = await usersModel
-      .findByIdAndUpdate({ _id: id }, updateObject, {
+    const updatedUser = await UsersModel.findByIdAndUpdate(
+      { _id: id },
+      updateObject,
+      {
         new: true,
         runValidators: true,
-      })
-      .select("-password");
+      }
+    ).select("-password");
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Usuario no encontrado" });
@@ -154,12 +156,14 @@ exports.banUser = async (req, res, next) => {
 
   try {
     const updateObject = { status: "banned", bannedComment: banMessage };
-    const updatedUser = await usersModel
-      .findByIdAndUpdate({ _id: userId }, updateObject, {
+    const updatedUser = await UsersModel.findByIdAndUpdate(
+      { _id: userId },
+      updateObject,
+      {
         new: true,
         runValidators: true,
-      })
-      .select("-password");
+      }
+    ).select("-password");
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Usuario no encontrado" });
