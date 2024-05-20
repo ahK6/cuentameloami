@@ -16,8 +16,6 @@ exports.createChat = async (data) => {
 exports.joinToChat = async (data) => {
   const { chatId, idUserHelping } = data;
 
-  console.log("dataaaaa " + JSON.stringify(data));
-
   try {
     const updatedUser = await MessagesModel.findByIdAndUpdate(
       { _id: chatId },
@@ -35,6 +33,21 @@ exports.joinToChat = async (data) => {
     return true;
   } catch (error) {
     console.log(error);
+    return false;
+  }
+};
+
+exports.getRoomById = async (roomId) => {
+  console.log("roommm id " + roomId);
+  try {
+    const roomInfo = await MessagesModel.findOne({ _id: roomId });
+
+    if (!roomInfo) {
+      return 404;
+    }
+
+    return roomInfo;
+  } catch (error) {
     return false;
   }
 };

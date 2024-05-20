@@ -38,6 +38,6 @@ app.use("/chat", require("./app/messages/routes/messages.route"));
 const port = 3000;
 
 // Inicia el servidor y hazlo escuchar en el puerto especificado
-server.listen(port, "192.168.1.3", () => {
+server.listen(port, "192.168.1.2", () => {
   console.log(`Servidor Express corriendo en el puerto ${port}`);
 });
