@@ -1,3 +1,4 @@
+const { saveChat } = require("../messages/controllers/messages.controller");
 const {
   createRoom,
   joinToRoom,
@@ -98,7 +99,7 @@ module.exports = function (io, users) {
     });
 
     // Manejar el evento de envío de mensaje en una sala
-    socket.on("room message", ({ roomId, message }, callback) => {
+    socket.on("send-message", async ({ roomId, message }, callback) => {
       const room = io.sockets.adapter.rooms.get(roomId);
       let isInRoom;
 
@@ -119,9 +120,22 @@ module.exports = function (io, users) {
           message: "No perteneces a esta sala",
         });
       }
+      const messageSent = await saveChat({
+        roomId,
+        message,
+        senderId: socket.userId,
+      });
 
-      io.to(roomId).emit("room message", {
-        sender: socket.username,
+      if (messageSent === false) {
+        return callback({
+          status: 500,
+          message: "No se pudo enviar el mensaje",
+        });
+      }
+
+      console.log("messgaaagee " + messageSent);
+      io.to(roomId).emit("send-message", {
+        senderiD: socket.senderId,
         message,
       });
 

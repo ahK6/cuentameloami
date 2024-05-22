@@ -19,7 +19,7 @@ exports.joinToRoom = async (data) => {
   try {
     const updatedUser = await RoomsModel.findByIdAndUpdate(
       { _id: chatId },
-      { idUserHelping },
+      { idUserHelping, chatStatus: "open" },
       {
         new: true,
         runValidators: true,
