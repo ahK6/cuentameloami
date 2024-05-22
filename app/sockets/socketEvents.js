@@ -2,7 +2,7 @@ const {
   createRoom,
   joinToRoom,
   getRoomById,
-} = require("../messages/controllers/messages.controller");
+} = require("../rooms/controllers/rooms.controller");
 
 module.exports = function (io, users) {
   io.on("connection", (socket) => {
