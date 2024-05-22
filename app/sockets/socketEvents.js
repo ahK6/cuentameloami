@@ -1,6 +1,6 @@
 const {
-  createChat,
-  joinToChat,
+  createRoom,
+  joinToRoom,
   getRoomById,
 } = require("../messages/controllers/messages.controller");
 
@@ -48,7 +48,7 @@ module.exports = function (io, users) {
 
       //PARA FRONT: cuando se crea el chat no debe pasarse ningun room id o pasarse como undefined
       if (roomId === null) {
-        const createdChat = await createChat(messageData);
+        const createdChat = await createRoom(messageData);
         roomId = createdChat._id.toString();
 
         console.log(typeof roomId);
@@ -59,7 +59,7 @@ module.exports = function (io, users) {
           });
         }
       } else {
-        const joined = await joinToChat({
+        const joined = await joinToRoom({
           chatId: roomId,
           idUserHelping: messageData.idUserHelping,
         });

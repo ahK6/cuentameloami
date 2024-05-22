@@ -1,6 +1,6 @@
 const MessagesModel = require("../models/messages.model");
 
-exports.createChat = async (data) => {
+exports.createRoom = async (data) => {
   const message = new MessagesModel(data);
 
   try {
@@ -13,7 +13,7 @@ exports.createChat = async (data) => {
   }
 };
 
-exports.joinToChat = async (data) => {
+exports.joinToRoom = async (data) => {
   const { chatId, idUserHelping } = data;
 
   try {
