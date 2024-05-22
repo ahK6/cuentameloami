@@ -46,13 +46,15 @@ module.exports = function (io, users) {
         });
       }
 
+      console.log("xdddd " + roomId);
+
       //PARA FRONT: cuando se crea el chat no debe pasarse ningun room id o pasarse como undefined
       if (roomId === null) {
         const createdChat = await createRoom(messageData);
         roomId = createdChat._id.toString();
 
         console.log(typeof roomId);
-        if (createChat === false) {
+        if (createdChat === false) {
           return callback({
             status: 500,
             message: "Hubo un error al crear el chat",

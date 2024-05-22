@@ -1,7 +1,7 @@
-const MessagesModel = require("../models/messages.model");
+const RoomsModel = require("../models/rooms.model");
 
 exports.createRoom = async (data) => {
-  const message = new MessagesModel(data);
+  const message = new RoomsModel(data);
 
   try {
     console.log(data);
@@ -17,7 +17,7 @@ exports.joinToRoom = async (data) => {
   const { chatId, idUserHelping } = data;
 
   try {
-    const updatedUser = await MessagesModel.findByIdAndUpdate(
+    const updatedUser = await RoomsModel.findByIdAndUpdate(
       { _id: chatId },
       { idUserHelping },
       {
@@ -40,7 +40,7 @@ exports.joinToRoom = async (data) => {
 exports.getRoomById = async (roomId) => {
   console.log("roommm id " + roomId);
   try {
-    const roomInfo = await MessagesModel.findOne({ _id: roomId });
+    const roomInfo = await RoomsModel.findOne({ _id: roomId });
 
     if (!roomInfo) {
       return 404;

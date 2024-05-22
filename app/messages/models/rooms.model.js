@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const messagesSchema = new Schema(
+const roomSchema = new Schema(
   {
     topic: {
       type: String,
@@ -38,6 +38,6 @@ const messagesSchema = new Schema(
   }
 );
 
-const messages = mongoose.model("messages", messagesSchema);
+const rooms = mongoose.model("rooms", roomSchema);
 
-module.exports = messages;
+module.exports = rooms;
