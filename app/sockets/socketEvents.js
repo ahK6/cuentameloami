@@ -180,6 +180,7 @@ module.exports = function (io, users) {
         console.log("entrooooo 22222222");
 
         socket.leave(roomId);
+        delete socket.room;
       }
 
       const room2 = io.sockets.adapter.rooms.get(roomId);
