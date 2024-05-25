@@ -31,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/users", require("./app/users/routes/users.route"));
 app.use("/chat", require("./app/rooms/routes/rooms.route"));
+app.use("/reports", require("./app/reports/routes/reports.route"));
 
 // Ruta de ejemplo
 
