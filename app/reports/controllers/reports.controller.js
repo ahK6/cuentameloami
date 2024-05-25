@@ -34,11 +34,11 @@ exports.createReport = async (req, res, next) => {
   }
 };
 
-exports.updateUser = async (req, res, next) => {
-  const { roomId } = req.body;
+exports.updateReport = async (req, res, next) => {
+  const { reportId } = req.body;
 
   let updateFields = req.body;
-  if (!esIdMongo(roomId)) {
+  if (!esIdMongo(reportId)) {
     return res.status(500).json({ message: "ID de sala invalido" });
   }
 
@@ -46,16 +46,21 @@ exports.updateUser = async (req, res, next) => {
     const updateObject = { $set: updateFields };
 
     const updatedReport = await ReportsModel.findByIdAndUpdate(
-      { _id: roomId },
-      updateObject,
+      { _id: reportId },
+      { ...updateObject, status: "reviewed" },
       {
         new: true,
         runValidators: true,
       }
     );
 
-    return res.status(200).json(updatedReport);
+    if (!updatedReport) {
+      return res.status(404).json({ message: "Reporte no encontrado" });
+    }
+
+    res.status(200).json({ message: "El reporte ha sido actualizado" });
   } catch (error) {
+    console.log("errror " + JSON.stringify(error));
     return res.status(500).json({
       message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
     });
