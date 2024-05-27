@@ -39,6 +39,6 @@ app.use("/reports", require("./app/reports/routes/reports.route"));
 const port = 3000;
 
 // Inicia el servidor y hazlo escuchar en el puerto especificado
-server.listen(port, "192.168.1.2", () => {
+server.listen(port, "192.168.1.5", () => {
   console.log(`Servidor Express corriendo en el puerto ${port}`);
 });
