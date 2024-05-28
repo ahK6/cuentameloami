@@ -1,10 +1,10 @@
-const ReportsModel = require("../models/reports.model");
+const MessagesReportsModel = require("../models/messagesReports.model");
 const RoomsModel = require("../../rooms/models/rooms.model");
 const { esIdMongo } = require("../../shared/utils/isMongoId");
 
 exports.createMessageReport = async (req, res, next) => {
   const { idRoom, reporterId } = req.body;
-  const report = new ReportsModel(req.body);
+  const report = new MessagesReportsModel(req.body);
 
   try {
     if (!esIdMongo(reporterId)) {
@@ -45,7 +45,7 @@ exports.updateMessageReport = async (req, res, next) => {
   try {
     const updateObject = { $set: updateFields };
 
-    const updatedReport = await ReportsModel.findByIdAndUpdate(
+    const updatedReport = await MessagesReportsModel.findByIdAndUpdate(
       { _id: reportId },
       { ...updateObject, status: "reviewed" },
       {
