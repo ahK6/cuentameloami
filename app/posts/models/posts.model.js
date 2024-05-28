@@ -22,7 +22,7 @@ const postSchema = new Schema(
     },
     status: {
       type: String,
-      default: "open", //open //closed
+      default: "open", //open //closed //deleted
     },
   },
   {

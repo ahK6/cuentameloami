@@ -4,25 +4,25 @@ const router = express.Router();
 const ReportsController = require("../controllers/reports.controller");
 const { verifyToken } = require("../../middlewares/auth/verify_jwt.middleware");
 const {
-  validateCreateReport,
+  validateCreateReportMessage,
 } = require("../validators/createReport.validator");
 
 const {
-  validateUpdateReport,
+  validateUpdateReportMessage,
 } = require("../validators/updateReport.validator");
 
 router.post(
   "/send-report",
   verifyToken,
-  validateCreateReport,
-  ReportsController.createReport
+  validateCreateReportMessage,
+  ReportsController.createMessageReport
 );
 
 router.put(
   "/update-report",
   verifyToken,
-  validateUpdateReport,
-  ReportsController.updateReport
+  validateUpdateReportMessage,
+  ReportsController.updateMessageReport
 );
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const updateReportValidation = Joi.object({
+const updateReportMessageValidation = Joi.object({
   reportId: Joi.string().required().messages({
     "any.required": "ID del reporte es requerido",
   }),
@@ -9,8 +9,8 @@ const updateReportValidation = Joi.object({
   }),
 });
 
-exports.validateUpdateReport = (req, res, next) => {
-  const { error } = updateReportValidation.validate(req.body);
+exports.validateUpdateReportMessage = (req, res, next) => {
+  const { error } = updateReportMessageValidation.validate(req.body);
 
   if (error) {
     return res.status(400).json({ error: error.details[0].message });

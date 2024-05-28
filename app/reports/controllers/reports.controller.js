@@ -2,7 +2,7 @@ const ReportsModel = require("../models/reports.model");
 const RoomsModel = require("../../rooms/models/rooms.model");
 const { esIdMongo } = require("../../shared/utils/isMongoId");
 
-exports.createReport = async (req, res, next) => {
+exports.createMessageReport = async (req, res, next) => {
   const { idRoom, reporterId } = req.body;
   const report = new ReportsModel(req.body);
 
@@ -34,7 +34,7 @@ exports.createReport = async (req, res, next) => {
   }
 };
 
-exports.updateReport = async (req, res, next) => {
+exports.updateMessageReport = async (req, res, next) => {
   const { reportId } = req.body;
 
   let updateFields = req.body;
