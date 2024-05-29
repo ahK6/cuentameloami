@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const ReportsController = require("../controllers/reports.controller");
+const ReportsMessagesController = require("../controllers/reportsMessages.controller");
 const { verifyToken } = require("../../middlewares/auth/verify_jwt.middleware");
 const {
   validateCreateReportMessage,
@@ -12,17 +12,17 @@ const {
 } = require("../validators/updateReport.validator");
 
 router.post(
-  "/send-report",
+  "/send-message-report",
   verifyToken,
   validateCreateReportMessage,
-  ReportsController.createMessageReport
+  ReportsMessagesController.createMessageReport
 );
 
 router.put(
-  "/update-report",
+  "/update-message-report",
   verifyToken,
   validateUpdateReportMessage,
-  ReportsController.updateMessageReport
+  ReportsMessagesController.updateMessageReport
 );
 
 module.exports = router;
