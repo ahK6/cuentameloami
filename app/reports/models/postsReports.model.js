@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const messagesReportsSchema = new Schema(
+const postsReportsSchema = new Schema(
   {
     status: {
       type: String,
@@ -10,9 +10,9 @@ const messagesReportsSchema = new Schema(
     comments: {
       type: String,
     },
-    idRoom: {
+    idPosts: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "rooms",
+      ref: "posts",
     },
     reporterId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -24,9 +24,6 @@ const messagesReportsSchema = new Schema(
   }
 );
 
-const messagesReports = mongoose.model(
-  "messagesReports",
-  messagesReportsSchema
-);
+const postsReports = mongoose.model("postsReports", postsReportsSchema);
 
-module.exports = messagesReports;
+module.exports = postsReports;
