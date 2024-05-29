@@ -8,6 +8,11 @@ const commentsSchema = new Schema(
       ref: "users",
       required: true,
     },
+    idPost: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "post",
+      required: true,
+    },
     content: {
       type: String,
     },

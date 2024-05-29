@@ -1,6 +1,9 @@
 const Joi = require("joi");
 
 const createCommentValidation = Joi.object({
+  idPost: Joi.string().required().messages({
+    "any.required": "ID del post es requerido",
+  }),
   content: Joi.string().required().messages({
     "any.required": "Contenido del comentario es requerido",
   }),
