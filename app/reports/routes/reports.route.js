@@ -10,7 +10,7 @@ const {
 } = require("../validators/createReport.validator");
 
 const {
-  validateUpdateReportMessage,
+  validateUpdateReport,
 } = require("../validators/updateReport.validator");
 
 router.post(
@@ -23,7 +23,7 @@ router.post(
 router.put(
   "/update-message-report",
   verifyToken,
-  validateUpdateReportMessage,
+  validateUpdateReport,
   ReportsMessagesController.updateMessageReport
 );
 
@@ -32,6 +32,13 @@ router.post(
   verifyToken,
   validateCreateReportPost,
   ReportsPostsController.createPostReport
+);
+
+router.put(
+  "/update-post-report",
+  verifyToken,
+  validateUpdateReport,
+  ReportsPostsController.updatePostReport
 );
 
 module.exports = router;

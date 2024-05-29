@@ -9,7 +9,7 @@ const updateReportMessageValidation = Joi.object({
   }),
 });
 
-exports.validateUpdateReportMessage = (req, res, next) => {
+exports.validateUpdateReport = (req, res, next) => {
   const { error } = updateReportMessageValidation.validate(req.body);
 
   if (error) {
