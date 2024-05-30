@@ -4,10 +4,10 @@ que los agobian dia tras dia, o son personas que estan pasando por X o Y situaci
 nadie que los ayude o los guie por el camino que deben de seguir para superar aquello que los 
 transtorna o no los deja en paz.
 
-Este es el proposito de este proyecto (este es solo el backend) conectar personas que quieren ser 
-escuchadas o que quieren superar X situacion o problema con otra personas que estan dispuestos a 
-escucharlos sin juzgarlos, o que incluso ya superaron X situacion y que quieren ayudar a otros
-a poder superar eso por lo que ellos ya pasaron.
+En redes sociales he visto demasiada gente queriendo ser escuchada por alguien mas, y este es el proposito de 
+este proyecto (este es solo el backend) conectar personas que quieren ser escuchadas o que quieren superar X 
+situacion o problema, con otras personas que estan dispuestos a escucharlos sin juzgarlos, o que incluso 
+ya superaron X situacion y que quieren ayudar a otrosa poder superar eso por lo que ellos ya pasaron.
 
 No tengo la intencion de monetizar este proyecto, mi unica intencion es ayudar directa o 
 indirectamente a todas aquellas personas que lo necesitan, porque yo tambien un dia
