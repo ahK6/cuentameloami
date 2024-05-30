@@ -9,3 +9,7 @@ escuchadas o que quieren superar X situacion o problema con otra personas que es
 escucharlos sin juzgarlos, o que incluso ya superaron X situacion y que quieren ayudar a otros
 a poder superar eso por lo que ellos ya pasaron.
 
+No tengo la intencion de monetizar este proyecto, mi unica intencion es ayudar directa o 
+indirectamente a todas aquellas personas que lo necesitan, porque yo tambien un dia
+me senti frustrado, deprimido, agobiado y con ganas de quitarme la vida por no tener quien
+me escuchara o quien me guiara en este camino llamado VIDA.
