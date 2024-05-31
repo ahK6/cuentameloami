@@ -35,7 +35,7 @@ exports.createLikeComment = async (req, res, next) => {
     }
 
     await liked.save();
-    res.status(200).json({ message: "Tu like se ha añadido" });
+    res.status(200).json({ message: "Has dado like" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
