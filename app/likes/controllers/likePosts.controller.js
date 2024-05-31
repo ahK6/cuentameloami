@@ -1,8 +1,8 @@
 const LikePostModel = require("../models/likePost.model");
-const PostsModel = require("../../posts/controllers/posts.controller");
+const PostsModel = require("../../posts/models/posts.model");
 const { esIdMongo } = require("../../shared/utils/isMongoId");
 
-exports.createLikeComment = async (req, res, next) => {
+exports.createLikePost = async (req, res, next) => {
   const { idPost, userId } = req.body;
   const liked = new LikePostModel(req.body);
 
