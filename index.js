@@ -34,6 +34,7 @@ app.use("/chat", require("./app/rooms/routes/rooms.route"));
 app.use("/reports", require("./app/reports/routes/reports.route"));
 app.use("/posts", require("./app/posts/routes/posts.route"));
 app.use("/comments", require("./app/comments/routes/comments.route"));
+app.use("/likes", require("./app/likes/routes/likeComments.route"));
 
 // Ruta de ejemplo
 
