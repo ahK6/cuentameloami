@@ -3,10 +3,12 @@ const router = express.Router();
 
 const ReportsMessagesController = require("../controllers/reportsMessages.controller");
 const ReportsPostsController = require("../controllers/reportsPosts.controller");
+const ReportsCommentsController = require("../controllers/reportComments.controller");
 const { verifyToken } = require("../../middlewares/auth/verify_jwt.middleware");
 const {
   validateCreateReportMessage,
   validateCreateReportPost,
+  validateCreateReportComment,
 } = require("../validators/createReport.validator");
 
 const {
@@ -39,6 +41,20 @@ router.put(
   verifyToken,
   validateUpdateReport,
   ReportsPostsController.updatePostReport
+);
+
+router.post(
+  "/send-comment-report",
+  verifyToken,
+  validateCreateReportComment,
+  ReportsCommentsController.createCommentReport
+);
+
+router.put(
+  "/update-comment-report",
+  verifyToken,
+  validateUpdateReport,
+  ReportsCommentsController.updateCommentReport
 );
 
 module.exports = router;

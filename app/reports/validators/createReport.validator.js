@@ -35,3 +35,21 @@ exports.validateCreateReportPost = (req, res, next) => {
   }
   next();
 };
+
+const createReportCommentsValidation = Joi.object({
+  idComment: Joi.string().required().messages({
+    "any.required": "ID del comentario es requerido",
+  }),
+  reporterId: Joi.string().required().messages({
+    "any.required": "ID del usuario que reporta es requerido",
+  }),
+});
+
+exports.validateCreateReportComment = (req, res, next) => {
+  const { error } = createReportCommentsValidation.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
+};

@@ -16,11 +16,11 @@ exports.createCommentReport = async (req, res, next) => {
     }
     const commentInfo = await CommentsModel.findOne({ _id: idComment });
 
-    console.log("rooom " + JSON.stringify(roomInfo));
+    console.log("rooom " + JSON.stringify(idComment));
 
     if (!commentInfo) {
       return res.status(404).json({
-        message: "La sala no existe",
+        message: "El comentario no existe",
       });
     }
 
@@ -34,12 +34,12 @@ exports.createCommentReport = async (req, res, next) => {
   }
 };
 
-exports.updateMessageReport = async (req, res, next) => {
+exports.updateCommentReport = async (req, res, next) => {
   const { reportId } = req.body;
 
   let updateFields = req.body;
   if (!esIdMongo(reportId)) {
-    return res.status(500).json({ message: "ID de sala invalido" });
+    return res.status(500).json({ message: "ID de comentario invalido" });
   }
 
   try {

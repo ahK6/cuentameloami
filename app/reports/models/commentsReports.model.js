@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const postsReportsSchema = new Schema(
+const commentsReportsSchema = new Schema(
   {
     status: {
       type: String,
@@ -24,6 +24,9 @@ const postsReportsSchema = new Schema(
   }
 );
 
-const postsReports = mongoose.model("postsReports", postsReportsSchema);
+const commentsReports = mongoose.model(
+  "commentsReports",
+  commentsReportsSchema
+);
 
-module.exports = postsReports;
+module.exports = commentsReports;
