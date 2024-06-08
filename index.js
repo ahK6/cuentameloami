@@ -42,6 +42,6 @@ app.use("/likes", require("./app/likes/routes/likeComments.route"));
 const port = 3000;
 
 // Inicia el servidor y hazlo escuchar en el puerto especificado
-server.listen(port, "192.168.1.5", () => {
+server.listen(port, "192.168.1.8", () => {
   console.log(`Servidor Express corriendo en el puerto ${port}`);
 });
