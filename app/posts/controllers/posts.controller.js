@@ -16,3 +16,26 @@ exports.createPost = async (req, res) => {
     });
   }
 };
+
+exports.getAllPost = async (req, res) => {
+  const { page, pageSize } = req.query;
+
+  console.log("paramss " + typeof page + " pagesize " + typeof pageSize);
+
+  try {
+    const pageInt = parseInt(page) || 1;
+    const pageSizeInt = parseInt(pageSize) || 100;
+
+    const allPost = await PostsModel.find()
+      .skip((pageInt - 1) * pageSizeInt)
+      .limit(pageSizeInt)
+      .exec();
+
+    res.status(200).json({ data: allPost });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+    });
+  }
+};
