@@ -25,6 +25,12 @@ const getPostByIdValidation = Joi.object({
   idPost: Joi.string().required().messages({
     "any.required": "ID del post es requerido",
   }),
+  page: Joi.string().required().messages({
+    "any.required": "Numero de pagina es requerido",
+  }),
+  pageSize: Joi.string().required().messages({
+    "any.required": "Comentarios a mostrar es requerido",
+  }),
 });
 
 exports.getPostByIdValidation = (req, res, next) => {

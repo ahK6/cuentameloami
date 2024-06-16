@@ -64,12 +64,16 @@ exports.getAllPost = async (req, res) => {
 };
 
 exports.getPostById = async (req, res) => {
-  const { idPost } = req.body;
+  const { idPost, page, pageSize } = req.body;
 
   try {
-    const postInfo = await PostsModel.findOne({ _id: idPost }).populate(
-      "comments"
-    );
+    const postInfo = await PostsModel.findOne({ _id: idPost }).populate({
+      path: "comments",
+      options: {
+        skip: (page - 1) * pageSize, // Saltar los comentarios ya paginados
+        limit: pageSize, // Limitar el número de comentarios
+      },
+    });
 
     if (!postInfo) {
       return res.status(404).json({
