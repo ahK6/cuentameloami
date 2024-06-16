@@ -20,3 +20,18 @@ exports.createpostValidation = (req, res, next) => {
   }
   next();
 };
+
+const getPostByIdValidation = Joi.object({
+  idPost: Joi.string().required().messages({
+    "any.required": "ID del post es requerido",
+  }),
+});
+
+exports.getPostByIdValidation = (req, res, next) => {
+  const { error } = getPostByIdValidation.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
+};
