@@ -20,6 +20,9 @@ const postSchema = new Schema(
       ref: "users",
       required: true,
     },
+    type: {
+      type: String, //requesting //helping
+    },
     status: {
       type: String,
       default: "open", //open //closed //deleted

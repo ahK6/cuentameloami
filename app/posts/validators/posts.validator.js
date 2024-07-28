@@ -10,6 +10,10 @@ const createpostValidation = Joi.object({
   keywords: Joi.string().required().messages({
     "any.required": "Palabras claves son requeridas",
   }),
+  type: Joi.string().valid("requesting", "helping").required().messages({
+    "any.only": "Tipo de publicación invalido",
+    "any.required": "Tipo de publicación es requerido",
+  }),
 });
 
 exports.createpostValidation = (req, res, next) => {
