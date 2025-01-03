@@ -25,10 +25,10 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const { phoneNumber, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await UsersModel.findOne({ phoneNumber });
+    const user = await UsersModel.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ message: "Credenciales inválidas" });

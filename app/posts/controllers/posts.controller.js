@@ -1,5 +1,6 @@
 const PostsModel = require("../models/posts.model");
 const KeywordsModel = require("../models/keywords.model");
+const CommentsModel = require("../../comments/models/comments.model");
 
 exports.createPost = async (req, res) => {
   const posts = new PostsModel(req.body);
@@ -36,9 +37,14 @@ exports.getAllPost = async (req, res) => {
         path: "idUserCreator",
         select: "nickName",
       })
+      .populate({
+        path: "comments",
+        select: "_id", // Solo obtenemos el ID de los comentarios para poder contar
+      })
       .skip((pageInt - 1) * pageSizeInt)
       .limit(pageSizeInt)
       .exec();
+
     res.status(200).json({ data: allPost });
   } catch (error) {
     console.log(error);
