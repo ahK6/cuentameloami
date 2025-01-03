@@ -1,4 +1,5 @@
 const PostsModel = require("../models/posts.model");
+const KeywordsModel = require("../models/keywords.model");
 
 exports.createPost = async (req, res) => {
   const posts = new PostsModel(req.body);
@@ -18,7 +19,7 @@ exports.createPost = async (req, res) => {
 };
 
 exports.getAllPost = async (req, res) => {
-  const { page, pageSize } = req.query;
+  const { page, pageSize, type } = req.query;
 
   console.log("paramss " + typeof page + " pagesize " + typeof pageSize);
 
@@ -26,34 +27,18 @@ exports.getAllPost = async (req, res) => {
     const pageInt = parseInt(page) || 1;
     const pageSizeInt = parseInt(pageSize) || 100;
 
-    const allPost = await PostsModel.find()
+    const totalPosts = await PostsModel.countDocuments({ type });
+
+    const totalPages = Math.ceil(totalPosts / pageSizeInt);
+
+    const allPost = await PostsModel.find({ type })
+      .populate({
+        path: "idUserCreator",
+        select: "nickName",
+      })
       .skip((pageInt - 1) * pageSizeInt)
       .limit(pageSizeInt)
       .exec();
-
-    res.status(200).json({ data: allPost });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
-    });
-  }
-};
-
-exports.getAllPost = async (req, res) => {
-  const { page, pageSize } = req.query;
-
-  console.log("paramss " + typeof page + " pagesize " + typeof pageSize);
-
-  try {
-    const pageInt = parseInt(page) || 1;
-    const pageSizeInt = parseInt(pageSize) || 100;
-
-    const allPost = await PostsModel.find()
-      .skip((pageInt - 1) * pageSizeInt)
-      .limit(pageSizeInt)
-      .exec();
-
     res.status(200).json({ data: allPost });
   } catch (error) {
     console.log(error);
@@ -82,6 +67,25 @@ exports.getPostById = async (req, res) => {
     }
 
     res.status(200).json({ data: postInfo });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+    });
+  }
+};
+
+exports.getKeyWords = async (req, res) => {
+  try {
+    const keywordsList = await KeywordsModel.find();
+
+    if (!keywordsList) {
+      return res.status(404).json({
+        message: "No hay palabras claves disponibles",
+      });
+    }
+
+    res.status(200).json({ data: keywordsList });
   } catch (error) {
     console.log(error);
     res.status(500).json({

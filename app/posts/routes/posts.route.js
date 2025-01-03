@@ -20,4 +20,6 @@ router.get("/get-all", PostController.getAllPost);
 
 router.post("/get-post", getPostByIdValidation, PostController.getPostById);
 
+router.get("/get-keywords", PostController.getKeyWords);
+
 module.exports = router;

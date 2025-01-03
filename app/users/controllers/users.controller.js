@@ -14,7 +14,7 @@ exports.signup = async (req, res, next) => {
     //si ocurre un problema devolvera el error
     if (error.errorResponse?.code === 11000) {
       return res
-        .status(500)
+        .status(409)
         .json({ message: "Correo electrónico o teléfono ya existente" });
     } else {
       return res.status(500).json({
@@ -35,7 +35,7 @@ exports.login = async (req, res, next) => {
     }
 
     if (user.status === "pending") {
-      return res.status(403).json({ message: "Usuario no verificado" });
+      return res.status(202).json({ message: "Usuario no verificado" });
     }
 
     if (user.status === "banned") {
