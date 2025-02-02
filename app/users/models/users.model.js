@@ -6,8 +6,6 @@ const userSchema = new Schema(
     phoneNumber: {
       type: String,
       trim: true,
-      required: true,
-      unique: true,
     },
     password: {
       type: String,
@@ -16,8 +14,8 @@ const userSchema = new Schema(
     email: {
       type: String,
       trim: true,
-      required: true,
       unique: true,
+      required: true,
     },
     name: {
       type: String,
@@ -30,6 +28,7 @@ const userSchema = new Schema(
     nickName: {
       type: String,
       trim: true,
+      unique: true,
       require: true,
     },
     birthday: {

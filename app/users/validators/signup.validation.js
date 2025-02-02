@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const signUpValidation = Joi.object({
-  phoneNumber: Joi.string(),
+  phoneNumber: Joi.string().optional(),
   password: Joi.string().required().messages({
     "any.required": "Contraseña es requerida",
   }),
@@ -27,6 +27,7 @@ const signUpValidation = Joi.object({
 });
 
 exports.validateSignUp = (req, res, next) => {
+  console.log(req.body);
   const { error } = signUpValidation.validate(req.body);
 
   if (error) {

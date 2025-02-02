@@ -8,9 +8,11 @@ exports.createPost = async (req, res) => {
 
   try {
     posts.idUserCreator = id;
-    await posts.save();
+    const post = await posts.save();
 
-    res.status(200).json({ message: "Publicación hecha con éxito" });
+    res
+      .status(200)
+      .json({ message: "Publicación hecha con éxito", data: post });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -45,25 +47,22 @@ exports.getAllPost = async (req, res) => {
       .limit(pageSizeInt)
       .exec();
 
-    res.status(200).json({ data: allPost });
+    res.status(200).json({ data: allPost, totalPages });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+      error: "Ha ocurrido un error, intentalo de nuevo mas tarde",
     });
   }
 };
 
 exports.getPostById = async (req, res) => {
-  const { idPost, page, pageSize } = req.body;
+  const { idPost } = req.query;
 
   try {
     const postInfo = await PostsModel.findOne({ _id: idPost }).populate({
-      path: "comments",
-      options: {
-        skip: (page - 1) * pageSize, // Saltar los comentarios ya paginados
-        limit: pageSize, // Limitar el número de comentarios
-      },
+      path: "idUserCreator",
+      select: "nickName",
     });
 
     if (!postInfo) {

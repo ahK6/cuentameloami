@@ -13,9 +13,7 @@ exports.signup = async (req, res, next) => {
   } catch (error) {
     //si ocurre un problema devolvera el error
     if (error.errorResponse?.code === 11000) {
-      return res
-        .status(409)
-        .json({ message: "Correo electrónico o teléfono ya existente" });
+      return res.status(409).json({ error: "Email o apodo ya existe" });
     } else {
       return res.status(500).json({
         message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
@@ -31,15 +29,15 @@ exports.login = async (req, res, next) => {
     const user = await UsersModel.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ message: "Credenciales inválidas" });
+      return res.status(401).json({ error: "Credenciales inválidas" });
     }
 
     if (user.status === "pending") {
-      return res.status(202).json({ message: "Usuario no verificado" });
+      return res.status(202).json({ error: "Usuario no verificado" });
     }
 
     if (user.status === "banned") {
-      return res.status(403).json({ message: "Usuario baneado" });
+      return res.status(403).json({ error: "Usuario baneado" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
