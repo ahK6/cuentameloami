@@ -13,6 +13,7 @@ const commentsSchema = new Schema(
       ref: "posts",
       required: true,
     },
+
     content: {
       type: String,
     },

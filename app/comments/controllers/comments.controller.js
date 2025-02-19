@@ -31,3 +31,21 @@ exports.createComment = async (req, res) => {
     });
   }
 };
+
+exports.getCommentsByPostId = async (req, res) => {
+  const { idPost } = req.query;
+
+  try {
+    const commentList = await CommentsModel.find({ idPost }).populate({
+      path: "idUserCreator",
+      select: "nickName",
+    });
+
+    res.status(200).json({ data: commentList });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+    });
+  }
+};

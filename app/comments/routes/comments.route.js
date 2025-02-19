@@ -13,4 +13,6 @@ router.post(
   CommentController.createComment
 );
 
+router.get("/get-comments", CommentController.getCommentsByPostId);
+
 module.exports = router;
