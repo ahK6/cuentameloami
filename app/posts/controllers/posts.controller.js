@@ -98,3 +98,75 @@ exports.getKeyWords = async (req, res) => {
     });
   }
 };
+
+exports.searchPosts = async (req, res) => {
+  try {
+    const {
+      q: query = '',
+      keywords = '',
+      page = 1,
+      limit = 10,
+      type = 'requesting' // requesting | helping
+    } = req.query;
+
+    // Crear filtros de búsqueda
+    let searchFilter = {};
+    
+    // Filtro por tipo de post
+    if (type) {
+      searchFilter.type = type;
+    }
+
+    // Filtro por texto (título y contenido)
+    if (query && query.trim() !== '') {
+      searchFilter.$or = [
+        { title: { $regex: query, $options: 'i' } },
+        { content: { $regex: query, $options: 'i' } }
+      ];
+    }
+
+    // Filtro por keywords
+    if (keywords && keywords.trim() !== '') {
+      const keywordArray = keywords.split(',').map(k => k.trim());
+      searchFilter.keywords = { $in: keywordArray };
+    }
+
+    // Calcular skip para paginación
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Buscar posts
+    const posts = await PostsModel.find(searchFilter)
+      .populate('idUserCreator', 'name nickName')
+      .populate('keywords', 'value')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    // Contar total de documentos
+    const total = await PostsModel.countDocuments(searchFilter);
+    const totalPages = Math.ceil(total / parseInt(limit));
+
+    res.status(200).json({
+      data: posts,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        total,
+        hasNextPage: parseInt(page) < totalPages,
+        hasPrevPage: parseInt(page) > 1
+      },
+      filters: {
+        query,
+        keywords: keywords.split(',').filter(k => k.trim()),
+        type
+      }
+    });
+
+  } catch (error) {
+    console.error('Error searching posts:', error);
+    res.status(500).json({
+      message: "Error al buscar posts",
+      error: error.message
+    });
+  }
+};

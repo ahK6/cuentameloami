@@ -41,3 +41,43 @@ exports.getPostByIdValidation = (req, res, next) => {
   }
   next();
 };
+
+const searchPostsValidation = Joi.object({
+  q: Joi.string().optional().trim().max(100).messages({
+    "string.max": "Query debe ser un string de máximo 100 caracteres",
+  }),
+  keywords: Joi.string().optional().custom((value) => {
+    if (value) {
+      const keywordArray = value.split(',');
+      if (keywordArray.length > 10) {
+        throw new Error('Máximo 10 keywords permitidos');
+      }
+    }
+    return value;
+  }).messages({
+    "any.custom": "Máximo 10 keywords permitidos",
+  }),
+  page: Joi.number().integer().min(1).optional().default(1).messages({
+    "number.base": "Page debe ser un número",
+    "number.integer": "Page debe ser un número entero",
+    "number.min": "Page debe ser mayor a 0",
+  }),
+  limit: Joi.number().integer().min(1).max(50).optional().default(10).messages({
+    "number.base": "Limit debe ser un número",
+    "number.integer": "Limit debe ser un número entero",
+    "number.min": "Limit debe ser mayor a 0",
+    "number.max": "Limit no puede ser mayor a 50",
+  }),
+  type: Joi.string().valid("requesting", "helping").optional().messages({
+    "any.only": "Type debe ser requesting o helping",
+  }),
+});
+
+exports.searchPostsValidation = (req, res, next) => {
+  const { error } = searchPostsValidation.validate(req.query);
+
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
+};
