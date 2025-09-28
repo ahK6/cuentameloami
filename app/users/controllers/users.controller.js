@@ -33,7 +33,7 @@ exports.login = async (req, res, next) => {
     }
 
     if (user.status === "pending") {
-      return res.status(202).json({ error: "Usuario no verificado" });
+      return res.status(403).json({ error: "Usuario no verificado" });
     }
 
     if (user.status === "banned") {
