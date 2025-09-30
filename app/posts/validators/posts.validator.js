@@ -7,10 +7,12 @@ const createpostValidation = Joi.object({
   content: Joi.string().required().messages({
     "any.required": "Contenido es requerido",
   }),
-  keywords: Joi.array().items(Joi.string()).required().messages({
+  keywords: Joi.alternatives().try(
+    Joi.array().items(Joi.string()),
+    Joi.string()
+  ).required().messages({
     "any.required": "Palabras claves son requeridas",
-    "array.base": "Palabras claves debe ser un arreglo",
-    "array.includes": "Cada palabra clave debe ser un string",
+    "alternatives.match": "Palabras claves debe ser un string o arreglo de strings",
   }),
   type: Joi.string().valid("requesting", "helping").required().messages({
     "any.only": "Tipo de publicación invalido",
@@ -24,6 +26,11 @@ exports.createpostValidation = (req, res, next) => {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
+
+  if (typeof req.body.keywords === 'string') {
+    req.body.keywords = [req.body.keywords];
+  }
+  
   next();
 };
 
