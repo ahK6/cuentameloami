@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UsersModel = require("../models/users.model");
+const ConfigModel = require("../../config/models/config.models");
 const { esIdMongo } = require("../../shared/utils/isMongoId");
 
 exports.signup = async (req, res, next) => {
@@ -8,7 +9,10 @@ exports.signup = async (req, res, next) => {
   user.password = await bcrypt.hash(req.body.password, 12);
 
   try {
-    await user.save();
+    const savedUser = await user.save();
+    const userId = savedUser._id;
+    await ConfigModel.createDefaultConfig(userId);
+
     res.status(200).json({ message: "Registrado correctamente" });
   } catch (error) {
     //si ocurre un problema devolvera el error
@@ -63,6 +67,7 @@ exports.login = async (req, res, next) => {
         username: user.nickName,
         name: user.name,
         lastName: user.lastName,
+        email: user.email,
       },
       token,
     });

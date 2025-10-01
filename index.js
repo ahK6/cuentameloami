@@ -28,6 +28,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/talktome", {
 // Crea una instancia de la aplicación Express
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use("/users", require("./app/users/routes/users.route"));
 app.use("/chat", require("./app/rooms/routes/rooms.route"));
@@ -35,6 +36,7 @@ app.use("/reports", require("./app/reports/routes/reports.route"));
 app.use("/posts", require("./app/posts/routes/posts.route"));
 app.use("/comments", require("./app/comments/routes/comments.route"));
 app.use("/likes", require("./app/likes/routes/likeComments.route"));
+app.use("/config", require("./app/config/routes/config.route"));
 
 // Ruta de ejemplo
 
