@@ -104,7 +104,7 @@ exports.updateUser = async (req, res, next) => {
   let updateFields = req.body;
 
   try {
-    const userInfo = await UsersModel.findOne({ _id: id }).select("-password");
+    const userInfo = await UsersModel.findOne({ _id: id });
 
     if (userInfo.email === req.body.email) {
       updateFields = { ...updateFields, email: undefined };
@@ -112,6 +112,18 @@ exports.updateUser = async (req, res, next) => {
 
     if (userInfo.phoneNumber === req.body.phoneNumber) {
       updateFields = { ...updateFields, phoneNumber: undefined };
+    }
+
+    if (updateFields.password) {
+      const isSamePassword = await bcrypt.compare(updateFields.password, userInfo.password);
+      
+      if (isSamePassword) {
+        return res.status(400).json({ 
+          message: "La nueva contraseña no puede ser igual a la actual" 
+        });
+      }
+      
+      updateFields.password = await bcrypt.hash(updateFields.password, 12);
     }
 
     const updateObject = { $set: updateFields };
@@ -129,7 +141,15 @@ exports.updateUser = async (req, res, next) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    return res.status(200).json(updatedUser);
+    return res.status(200).json({
+      success: true,
+      data: {
+        id: updatedUser._id,
+        username: updatedUser.nickName,
+        email: updatedUser.email,
+      },
+      message: "Usuario actualizado correctamente"
+    });
   } catch (error) {
     if (error.errorResponse?.code === 11000) {
       return res
