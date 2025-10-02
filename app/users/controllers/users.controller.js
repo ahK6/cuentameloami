@@ -200,3 +200,64 @@ exports.banUser = async (req, res, next) => {
     });
   }
 };
+
+exports.validateToken = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+
+    // Buscar el usuario en la base de datos
+    const user = await UsersModel.findOne({ _id: id }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: "Usuario no encontrado" 
+      });
+    }
+
+    // Verificar que el usuario esté activo
+    if (user.status === "banned") {
+      return res.status(403).json({ 
+        success: false,
+        error: "Usuario baneado" 
+      });
+    }
+
+    if (user.status === "pending") {
+      return res.status(403).json({ 
+        success: false,
+        error: "Usuario no verificado" 
+      });
+    }
+
+    // Generar un nuevo token (refresh)
+    const newToken = jwt.sign(
+      {
+        id: user._id,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+      },
+      "xddd",
+      { expiresIn: "12h" }
+    );
+
+    // Devolver la misma estructura que en login con token renovado
+    res.status(200).json({
+      userInformation: {
+        id: user._id,
+        phoneNumber: user.phoneNumber,
+        username: user.nickName,
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+      },
+      token: newToken, // Token renovado
+    });
+  } catch (error) {
+    console.error("Error validating token:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+    });
+  }
+};

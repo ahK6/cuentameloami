@@ -13,4 +13,6 @@ router.get("/user-info", verifyToken, UsersControllers.getUserById);
 router.put("/user-update", verifyToken, UsersControllers.updateUser);
 router.put("/ban-user", verifyToken, validateBan, UsersControllers.banUser);
 
+router.get("/validate-token", verifyToken, UsersControllers.validateToken);
+
 module.exports = router;
