@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UsersModel = require("../models/users.model");
+const ConfigModel = require("../../config/models/config.models");
 const { esIdMongo } = require("../../shared/utils/isMongoId");
 
 exports.signup = async (req, res, next) => {
@@ -8,7 +9,10 @@ exports.signup = async (req, res, next) => {
   user.password = await bcrypt.hash(req.body.password, 12);
 
   try {
-    await user.save();
+    const savedUser = await user.save();
+    const userId = savedUser._id;
+    await ConfigModel.createDefaultConfig(userId);
+
     res.status(200).json({ message: "Registrado correctamente" });
   } catch (error) {
     //si ocurre un problema devolvera el error
@@ -33,7 +37,7 @@ exports.login = async (req, res, next) => {
     }
 
     if (user.status === "pending") {
-      return res.status(202).json({ error: "Usuario no verificado" });
+      return res.status(403).json({ error: "Usuario no verificado" });
     }
 
     if (user.status === "banned") {
@@ -63,6 +67,7 @@ exports.login = async (req, res, next) => {
         username: user.nickName,
         name: user.name,
         lastName: user.lastName,
+        email: user.email,
       },
       token,
     });
@@ -99,7 +104,7 @@ exports.updateUser = async (req, res, next) => {
   let updateFields = req.body;
 
   try {
-    const userInfo = await UsersModel.findOne({ _id: id }).select("-password");
+    const userInfo = await UsersModel.findOne({ _id: id });
 
     if (userInfo.email === req.body.email) {
       updateFields = { ...updateFields, email: undefined };
@@ -107,6 +112,18 @@ exports.updateUser = async (req, res, next) => {
 
     if (userInfo.phoneNumber === req.body.phoneNumber) {
       updateFields = { ...updateFields, phoneNumber: undefined };
+    }
+
+    if (updateFields.password) {
+      const isSamePassword = await bcrypt.compare(updateFields.password, userInfo.password);
+      
+      if (isSamePassword) {
+        return res.status(400).json({ 
+          message: "La nueva contraseña no puede ser igual a la actual" 
+        });
+      }
+      
+      updateFields.password = await bcrypt.hash(updateFields.password, 12);
     }
 
     const updateObject = { $set: updateFields };
@@ -124,7 +141,15 @@ exports.updateUser = async (req, res, next) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    return res.status(200).json(updatedUser);
+    return res.status(200).json({
+      success: true,
+      data: {
+        id: updatedUser._id,
+        username: updatedUser.nickName,
+        email: updatedUser.email,
+      },
+      message: "Usuario actualizado correctamente"
+    });
   } catch (error) {
     if (error.errorResponse?.code === 11000) {
       return res
@@ -171,6 +196,67 @@ exports.banUser = async (req, res, next) => {
   } catch (error) {
     console.log("wrwer " + JSON.stringify(error));
     return res.status(500).json({
+      message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
+    });
+  }
+};
+
+exports.validateToken = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+
+    // Buscar el usuario en la base de datos
+    const user = await UsersModel.findOne({ _id: id }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: "Usuario no encontrado" 
+      });
+    }
+
+    // Verificar que el usuario esté activo
+    if (user.status === "banned") {
+      return res.status(403).json({ 
+        success: false,
+        error: "Usuario baneado" 
+      });
+    }
+
+    if (user.status === "pending") {
+      return res.status(403).json({ 
+        success: false,
+        error: "Usuario no verificado" 
+      });
+    }
+
+    // Generar un nuevo token (refresh)
+    const newToken = jwt.sign(
+      {
+        id: user._id,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+      },
+      "xddd",
+      { expiresIn: "12h" }
+    );
+
+    // Devolver la misma estructura que en login con token renovado
+    res.status(200).json({
+      userInformation: {
+        id: user._id,
+        phoneNumber: user.phoneNumber,
+        username: user.nickName,
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+      },
+      token: newToken, // Token renovado
+    });
+  } catch (error) {
+    console.error("Error validating token:", error);
+    return res.status(500).json({
+      success: false,
       message: "Ha ocurrido un error, intentalo de nuevo mas tarde",
     });
   }
